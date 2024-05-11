@@ -1,0 +1,187 @@
+<section class="home">
+  <div class="container">
+    <div class="row d-flex justify-content-center">
+      <div class="col-lg-8 col-11" style="padding: 0; margin: 0;">
+        <div class="header text-center rounded-2 rounded-bottom-0">
+          <h1>Get Deals Firsthand!!</h1>
+          <p class="fs-4">Submit your information and get future deals first hand!</p>
+        </div>
+      </div>
+    </div>
+    <div class="row d-flex justify-content-center">
+
+      <div class="col-lg-8 col-11 form  pt-3 pb-5 px-3 rounded-2 rounded-top-0 border">
+        <div class="form-start mt-4 rounded">
+          <form (ngSubmit)="submitForm()">
+            <div class="mb-4">
+              <label for="buyerName" class="form-label">Buyer Name</label>
+              <input type="text" class="form-control" id="buyerName" placeholder="">
+            </div>
+
+            <div class="mb-4">
+              <label for="notes" class="form-label">Notes</label>
+              <textarea class="form-control" aria-label="With textarea" rows="2"></textarea>
+            </div>
+            <div class="mb-4">
+              <label for="typeOfInvestor" class="form-label">Type of Investor</label>
+              <div class="row ps-3">
+                <div class="col-lg-4 col-12 form-check" *ngFor="let type of investorTypes">
+                  <input class="form-check-input" type="checkbox" id="type{{type.id}}" [(ngModel)]="type.selected"
+                    name="investorTypes">
+                  <label class="form-check-label" for="type{{type.id}}">{{ type.name }}</label>
+                </div>
+              </div>
+            </div>
+
+            <div class="mb-4">
+              <label for="typeOfInvestor" class="form-label">Asset Class</label>
+              <div class="row ps-3">
+                <div class="col-lg-4 col-12 form-check" *ngFor="let assetClass of assetClasses">
+                  <input class="form-check-input" type="checkbox" id="assetClass{{assetClass.id}}"
+                    [(ngModel)]="assetClass.selected" name="assetClasses">
+                  <label class="form-check-label" for="assetClass{{assetClass.id}}">{{ assetClass.name }}</label>
+
+                </div>
+              </div>
+            </div>
+
+            <div class="mb-4">
+              <label for="pricePoint" class="form-label">Price Point</label>
+              <select class="form-select" id="pricePoint" [(ngModel)]="selectedPricePoint" name="pricePoint">
+                <option *ngFor="let value of pricePoint" [value]="value.name">{{ value.name }}</option>
+              </select>
+            </div>
+
+            <div class="mb-4">
+              <label for="states" class="form-label">State in US</label>
+
+              <ng-multiselect-dropdown [placeholder]="'Please select an option'" [settings]="dropdownSettings"
+                [data]="dropdownList" [(ngModel)]="selectedItems" (onSelect)="onItemSelect($event)"
+                (onSelectAll)="onSelectAll($event)">
+              </ng-multiselect-dropdown>
+
+            </div>
+
+            <div class="mb-4">
+              <label for="cities" class="form-label">Cities</label>
+
+              <ng-multiselect-dropdown [placeholder]="'Please select an option'" [settings]="dropdownSettings"
+                [data]="dropdownListCities" [(ngModel)]="selectedItemsCities" (onSelect)="onItemSelect($event)"
+                (onSelectAll)="onSelectAll($event)">
+              </ng-multiselect-dropdown>
+
+            </div>
+
+            <!-- Phones section -->
+            <div class="phones-input col-lg-12 col-12">
+              <!-- Label and inputs for adding phones -->
+              <div>
+                <label for="phones" class="form-label">Correct Phone</label>
+              </div>
+              <div class="row">
+                <div class="col-12">
+                  <div class="row">
+                    <div class="col-lg-2">
+                      <div class="input-group">
+                        <select class="form-select" id="phoneType">
+                          <option value="mobile">Mobile</option>
+                          <option value="work">Work</option>
+                          <option value="phone">Phone</option>
+                          <option value="main">Main</option>
+                          <option value="privatefax">Private Fax</option>
+                          <option value="others">Others</option>
+                        </select>
+                      </div>
+                    </div>
+                    <div class="col-lg-7 my-lg-0 my-2">
+                      <input type="text" id="phonesInp" class="form-control" name="phones"
+                        (input)="onPhoneInputChange($event)">
+                    </div>
+                    <div class="col-lg-3">
+                      <button type="button" class="btn btn-dark btn-sm" [disabled]="!isPhoneInputValid"
+                        (click)="addPhone()">
+                        <i class="fa fa-plus-square" aria-hidden="true"></i> Add Another
+                      </button>
+                    </div>
+                  </div>
+                  <div class="row mt-2">
+                    <div class="col-md-6 col-12 ">
+                      <ul class="list-group" id="availableTimings">
+                        <li class="list-group-item d-flex justify-content-between align-items-center my-1"
+                          *ngFor="let phonesArr of phones; let ind = index" id="phones{{ind}}">
+                          {{phonesArr}}
+                          <button type="button" class="btn btn-danger btn-sm" (click)="removePhone(ind)">
+                            <i class="fa fa-trash" aria-hidden="true"></i>
+                          </button>
+                        </li>
+                      </ul>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <!-- List of added phones -->
+            </div>
+
+            <!-- Emails section -->
+            <div class="emails-input col-lg-12 col-12 mt-3">
+              <!-- Label and inputs for adding emails -->
+              <div>
+                <label for="emails" class="form-label">Correct Email</label>
+              </div>
+              <div class="row">
+                <div class="col-12">
+                  <div class="row">
+                    <div class="col-lg-2">
+                      <div class="input-group">
+                        <select class="form-select" id="emailType">
+                          <option value="other">Other</option>
+                          <option value="home">Home</option>
+                          <option value="work">Work</option>
+                        </select>
+                      </div>
+                    </div>
+                    <div class="col-lg-7  my-lg-0 my-2">
+                      <input type="text" id="emailsInp" class="form-control" name="emails"
+                        (input)="onEmailInputChange($event)">
+                    </div>
+                    <div class="col-lg-3">
+                      <button type="button" class="btn btn-dark btn-sm" [disabled]="!isEmailInputValid"
+                        (click)="addEmail()">
+                        <i class="fa fa-plus-square" aria-hidden="true"></i> Add Another
+                      </button>
+                    </div>
+                  </div>
+
+                  <div class="row mt-2 ">
+                    <div class="col-md-6 col-12 ">
+                      <ul class="list-group" id="availableTimings">
+                        <li class="list-group-item d-flex justify-content-between align-items-center my-1"
+                          *ngFor="let emailsArr of emails; let ind = index" id="emails{{ind}}">
+                          {{emailsArr}}
+                          <button type="button" class="btn btn-danger btn-sm" (click)="removeEmail(ind)">
+                            <i class="fa fa-trash" aria-hidden="true"></i>
+                          </button>
+                        </li>
+                      </ul>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <!-- List of added emails -->
+            </div>
+
+            <div class="mt-4">
+              <label for="entityName" class="form-label">Entity Name</label>
+              <input type="text" class="form-control" id="entityName" placeholder="">
+            </div>
+
+
+            <div class="mt-4">
+              <button type="submit" class="btn btn-dark btn-lg">Submit</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

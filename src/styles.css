@@ -1,1 +1,35 @@
 /* You can add global styles to this file, and also import other style files */
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Poetsen+One&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300..800;1,300..800&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Raleway:ital,wght@0,100..900;1,100..900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Nunito:ital,wght@0,200..1000;1,200..1000&display=swap');
+*{
+    padding: 0;
+    margin: 0;
+}
+
+body{
+   /* font-family: "Montserrat", sans-serif; */
+   /* font-family: "Open Sans", sans-serif; */
+   /* font-family: "Raleway", sans-serif; */
+   font-family: "Nunito", sans-serif;
+    background-attachment: fixed;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+    /* Set a minimum height */
+    /* background-image: linear-gradient(rgba(0, 0, 0, 0.111), rgba(16, 16, 16, 0.688)), url('https://w0.peakpx.com/wallpaper/112/102/HD-wallpaper-buying-real-estate-buying-a-home-real-estate-concepts-buying-house-small-house-in-hands-transfer-of-house-keys.jpg'); */
+    background-image: linear-gradient(rgba(0, 0, 0, 0.349), rgba(16, 16, 16, 0.688)), url('https://assets.bwbx.io/images/users/iqjWHBFdfxIU/ik5gZuBvcxd4/v1/-1x-1.jpg');
+  
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+h1{
+    font-family: "Poetsen One", sans-serif;
+}
+
+.selected-item {
+    max-width: 100% !important;
+}

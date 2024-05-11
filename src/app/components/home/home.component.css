@@ -1,0 +1,22 @@
+.home {
+    padding: 30px 0;
+
+}
+
+.home .header {
+    color: white;
+    background-color: rgb(40, 141, 230);
+}
+
+.home .form {
+
+    background: rgb(255, 255, 255);
+}
+
+.home .form-label {
+    font-weight: 800;
+}
+
+.home .header {
+    padding: 10px;
+}
