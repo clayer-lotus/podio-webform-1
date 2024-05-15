@@ -18895,66 +18895,78 @@ submitForm() {
     // Remove trailing comma and space
     selectedCities = selectedCities.slice(0, -2);
   
-    console.log(selectedCities);
-    console.log(selectedStates);
-  
+    // Concatenate phone numbers into a single string
+    let phoneNumbers = this.phones.join(',');
+    if (this.formData.phoneNumber !== '') {
+        phoneNumbers += `,${this.formData.phoneType}:${this.formData.phoneNumber}`;
+      }
+
+   
+    // Concatenate email addresses into a single string
+    let emailAddresses = this.emails.join(', ');
+
+    // If emailAddress is not empty, add it to emailAddresses with its type
+    if (this.formData.emailAddress !== '') {
+      emailAddresses += `, ${this.formData.emailType}:${this.formData.emailAddress}`;
+    }
+
     const formDataToSubmit = {
       newselectedStates: selectedStates,
       newselectedCities: selectedCities,
       newselectedInvestorTypes: selectedInvestorTypes,
       newselectedAssetClasses: selectedAssetClasses,
-      phones: this.phones,
-      emails: this.emails,
+      phoneNumbers: phoneNumbers, // Add concatenated phone numbers
+      emailAddresses: emailAddresses, // Add concatenated email addresses
       ...this.formData // Include other form data
     };
   
     console.log('Form Data:', formDataToSubmit);
    // Send formData to webhook
-    const webhookUrl = 'https://api.michaelthehomebuyer.ca/lewis/webform-podio';
-    this.http.post(webhookUrl, formDataToSubmit, { observe: 'response' }).subscribe(
-        (res: HttpResponse<any>) => {
-          console.log('Data successfully sent to webhook', res.status);
-          const statusString: string = res.body.status.toString(); 
-          const errorMessage = res.body && res.body.message ? res.body.message : 'An error occurred';
+    // const webhookUrl = 'https://api.michaelthehomebuyer.ca/lewis/webform-podio';
+    // this.http.post(webhookUrl, formDataToSubmit, { observe: 'response' }).subscribe(
+    //     (res: HttpResponse<any>) => {
+    //       console.log('Data successfully sent to webhook', res.status);
+    //       const statusString: string = res.body.status.toString(); 
+    //       const errorMessage = res.body && res.body.message ? res.body.message : 'An error occurred';
          
-          if (res.status == 200) {
-            this._toast.success({detail: "SUCCESS", summary: 'Form successfully submitted'});  
+    //       if (res.status == 200) {
+    //         this._toast.success({detail: "SUCCESS", summary: 'Form successfully submitted'});  
        
-            setTimeout(() => {
-                this.spinner.hide();
-            }, 1000);
-         } else if (res.status == 400) {
-          alert(errorMessage);
-          location.reload;
-            setTimeout(() => {
-                this.spinner.hide();
-                window.location.reload();
-            }, 1000);
+    //         setTimeout(() => {
+    //             this.spinner.hide();
+    //         }, 1000);
+    //      } else if (res.status == 400) {
+    //       alert(errorMessage);
+    //       location.reload;
+    //         setTimeout(() => {
+    //             this.spinner.hide();
+    //             window.location.reload();
+    //         }, 1000);
  
-        } else if (res.status == 500) {
-          alert(errorMessage);
-          location.reload;
-            setTimeout(() => {
-                this.spinner.hide();
-                window.location.reload();
-            }, 1000);
+    //     } else if (res.status == 500) {
+    //       alert(errorMessage);
+    //       location.reload;
+    //         setTimeout(() => {
+    //             this.spinner.hide();
+    //             window.location.reload();
+    //         }, 1000);
  
-        }
+    //     }
  
-        },
-        error => {
-          console.error('Error sending data to webhook', error);
-          alert("Some error occured. Please try after sometime");
-        location.reload;
-          setTimeout(() => {
-              this.spinner.hide();
-              window.location.reload();
-          }, 1000);
+    //     },
+    //     error => {
+    //       console.error('Error sending data to webhook', error);
+    //       alert("Some error occured. Please try after sometime");
+    //     location.reload;
+    //       setTimeout(() => {
+    //           this.spinner.hide();
+    //           window.location.reload();
+    //       }, 1000);
       
  
  
-        }
-      );
+    //     }
+    //   );
   }
   
   
