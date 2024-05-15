@@ -1,6 +1,8 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpResponse } from '@angular/common/http';
 import { Component } from '@angular/core';
+import { NgToastService } from 'ng-angular-popup';
 import { IDropdownSettings } from 'ng-multiselect-dropdown';
+import { NgxSpinnerService } from 'ngx-spinner';
 
 @Component({
   selector: 'app-home',
@@ -18776,7 +18778,7 @@ export class HomeComponent {
   isEmailInputValid: boolean = false;
 
 
-  constructor(private http: HttpClient) {
+  constructor(private http: HttpClient, private spinner : NgxSpinnerService, private _toast : NgToastService, ) {
     // Populate dropdown list with USA states
     this.dropdownList = Object.entries(this.usaStates).map(([key, value], index) => ({
       id: key,
@@ -18874,6 +18876,7 @@ export class HomeComponent {
 
 //   }
 submitForm() {
+    this.spinner.show();
     const selectedInvestorTypes = this.investorTypes.filter(type => type.selected).map(type => type.name).join(',');
     const selectedAssetClasses = this.assetClasses.filter(assetClass => assetClass.selected).map(assetClass => assetClass.name).join(',');
   
@@ -18906,17 +18909,52 @@ submitForm() {
     };
   
     console.log('Form Data:', formDataToSubmit);
-  
    // Send formData to webhook
     const webhookUrl = 'https://api.michaelthehomebuyer.ca/lewis/webform-podio';
-    this.http.post(webhookUrl, formDataToSubmit).subscribe(
-      response => {
-        console.log('Data successfully sent to webhook', response);
-      },
-      error => {
-        console.error('Error sending data to webhook', error);
-      }
-    );
+    this.http.post(webhookUrl, formDataToSubmit, { observe: 'response' }).subscribe(
+        (res: HttpResponse<any>) => {
+          console.log('Data successfully sent to webhook', res.status);
+          const statusString: string = res.body.status.toString(); 
+          const errorMessage = res.body && res.body.message ? res.body.message : 'An error occurred';
+         
+          if (res.status == 200) {
+            this._toast.success({detail: "SUCCESS", summary: 'Form successfully submitted'});  
+       
+            setTimeout(() => {
+                this.spinner.hide();
+            }, 1000);
+         } else if (res.status == 400) {
+          alert(errorMessage);
+          location.reload;
+            setTimeout(() => {
+                this.spinner.hide();
+                window.location.reload();
+            }, 1000);
+ 
+        } else if (res.status == 500) {
+          alert(errorMessage);
+          location.reload;
+            setTimeout(() => {
+                this.spinner.hide();
+                window.location.reload();
+            }, 1000);
+ 
+        }
+ 
+        },
+        error => {
+          console.error('Error sending data to webhook', error);
+          alert("Some error occured. Please try after sometime");
+        location.reload;
+          setTimeout(() => {
+              this.spinner.hide();
+              window.location.reload();
+          }, 1000);
+      
+ 
+ 
+        }
+      );
   }
   
   
@@ -18940,7 +18978,18 @@ submitForm() {
     console.log('Deselected All:', items);
   }
 
-
+  isFormFilled(): boolean {
+    return (
+      this.formData.buyerName &&
+      this.formData.notes &&
+      this.formData.selectedPricePoint &&
+      this.formData.selectedStates.length > 0 &&
+      this.formData.selectedCities.length > 0 &&
+      this.formData.phoneNumber &&
+      this.formData.emailAddress &&
+      this.formData.entityName
+    );
+  }
   fetchCities() {
     this.http.get<any>('https://gist.githubusercontent.com/knvaughn/f301aa1a662d8f3ed9b3747d6c20cdbc/raw/9b1675e83f0fa060b4d08ab3e130d7d4207308db/US-States-and-Cities.json')
       .subscribe(data => {
