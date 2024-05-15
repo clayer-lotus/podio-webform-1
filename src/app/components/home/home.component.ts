@@ -8,9 +8,21 @@ import { IDropdownSettings } from 'ng-multiselect-dropdown';
   styleUrls: ['./home.component.css']
 })
 export class HomeComponent {
-
+    formData: any = {
+        buyerName: '',
+        notes: '',
+        selectedPricePoint: 'No Limit',
+        selectedStates: [],
+        selectedCities: [],
+        phoneType: 'mobile',
+        phoneNumber: '',
+        emailType: 'other',
+        emailAddress: '',
+        entityName: ''
+      };
   numbers: string[] = ['']; // Initial number input field
-
+  selectedStates: any[] = [];
+  selectedCities: any[] = [];
   investorTypes = [
     { id: 1, name: 'Developer', selected: false },
     { id: 2, name: 'Realtor', selected: false },
@@ -38,8 +50,7 @@ export class HomeComponent {
   ];
 
   pricePoint = [
-    { id: 0, name: 'Please select an option' },
-    { id: 1, name: 'No Limit' },
+   { id: 1, name: 'No Limit' },
     { id: 2, name: 'Up to $50,000' },
     { id: 3, name: 'Up to $100,000' },
     { id: 4, name: 'Up to $150,000' },
@@ -18854,15 +18865,61 @@ export class HomeComponent {
     "WY": "Wyoming"
   };
 
-  submitForm() {
-    const selectedTypes = this.investorTypes.filter(type => type.selected).map(type => type.name);
-    console.log(selectedTypes);
+//   submitForm() {
+//     const selectedTypes = this.investorTypes.filter(type => type.selected).map(type => type.name);
+//     console.log(selectedTypes);
 
-    const selectedAssetClasses = this.assetClasses.filter(assetClass => assetClass.selected).map(assetClass => assetClass.name);
-    console.log(selectedAssetClasses);
+//     const selectedAssetClasses = this.assetClasses.filter(assetClass => assetClass.selected).map(assetClass => assetClass.name);
+//     console.log(selectedAssetClasses);
 
+//   }
+submitForm() {
+    const selectedInvestorTypes = this.investorTypes.filter(type => type.selected).map(type => type.name).join(',');
+    const selectedAssetClasses = this.assetClasses.filter(assetClass => assetClass.selected).map(assetClass => assetClass.name).join(',');
+  
+    let selectedStates = '';
+    let selectedCities = '';
+  
+    for (const state of this.formData.selectedStates) {
+      selectedStates += state.name + ', ';
+    }
+    // Remove trailing comma and space
+    selectedStates = selectedStates.slice(0, -2);
+  
+    for (const city of this.formData.selectedCities) {
+      selectedCities += city.name + ', ';
+    }
+    // Remove trailing comma and space
+    selectedCities = selectedCities.slice(0, -2);
+  
+    console.log(selectedCities);
+    console.log(selectedStates);
+  
+    const formDataToSubmit = {
+      newselectedStates: selectedStates,
+      newselectedCities: selectedCities,
+      newselectedInvestorTypes: selectedInvestorTypes,
+      newselectedAssetClasses: selectedAssetClasses,
+      phones: this.phones,
+      emails: this.emails,
+      ...this.formData // Include other form data
+    };
+  
+    console.log('Form Data:', formDataToSubmit);
+  
+   // Send formData to webhook
+    const webhookUrl = 'https://api.michaelthehomebuyer.ca/lewis/webform-podio';
+    this.http.post(webhookUrl, formDataToSubmit).subscribe(
+      response => {
+        console.log('Data successfully sent to webhook', response);
+      },
+      error => {
+        console.error('Error sending data to webhook', error);
+      }
+    );
   }
-
+  
+  
   // Handle selection change
   onItemSelect(item: any) {
     console.log('Selected Item:', item);
