@@ -18903,11 +18903,11 @@ submitForm() {
 
    
     // Concatenate email addresses into a single string
-    let emailAddresses = this.emails.join(', ');
+    let emailAddresses = this.emails.join(',');
 
     // If emailAddress is not empty, add it to emailAddresses with its type
     if (this.formData.emailAddress !== '') {
-      emailAddresses += `, ${this.formData.emailType}:${this.formData.emailAddress}`;
+      emailAddresses += `,${this.formData.emailType}:${this.formData.emailAddress}`;
     }
 
     const formDataToSubmit = {
